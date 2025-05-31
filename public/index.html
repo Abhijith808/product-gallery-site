@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Gallery</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    img { margin: 10px; width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Upload a Product Image</h1>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <h2>Product Gallery</h2>
+  <div id="gallery"></div>
+
+  <script>
+    const repo = "Abhijith808/product-gallery";
+    const path = "images";
+    const branch = "main";
+
+    async function loadImages() {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`);
+      const data = await res.json();
+      const gallery = document.getElementById('gallery');
+
+      gallery.innerHTML = '';
+      data.forEach(file => {
+        if (file.type === 'file') {
+          const img = document.createElement('img');
+          img.src = file.download_url;
+          gallery.appendChild(img);
+        }
+      });
+    }
+
+    loadImages();
+  </script>
+</body>
+</html>
